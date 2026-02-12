@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Chat</title>
+    <link rel="stylesheet" href="/static/chat/style.css">
+
+</head>
+<body>
+    <h1>Chat with AI</h1>
+
+    <form method="post" action="/chat">
+        <input
+            type="text"
+            name="message"
+            placeholder="Type your message here"
+            required
+        >
+        <button type="submit">Send</button>
+    </form>
+    <div class="chat-container">
+
+        {% if user_message %}
+            <div class="message user">
+                <strong>You:</strong>
+                <p>{{ user_message }}</p>
+            </div>
+        {% endif %}
+
+        {% if ai_reply %}
+            <div class="message ai">
+                <strong>AI:</strong>
+                <p>{{ ai_reply }}</p>
+            </div>
+        {% endif %}
+
+    </div>
+
+
+</body>
+</html>
