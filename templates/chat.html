@@ -1,40 +1,193 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>AI Chat</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Assistant</title>
     <link rel="stylesheet" href="/static/chat/style.css">
-
 </head>
 <body>
-    <h1>Chat with AI</h1>
-
-    <form method="post" action="/chat">
-        <input
-            type="text"
-            name="message"
-            placeholder="Type your message here"
-            required
-        >
-        <button type="submit">Send</button>
-    </form>
-    <div class="chat-container">
-
-        {% if user_message %}
-            <div class="message user">
-                <strong>You:</strong>
-                <p>{{ user_message }}</p>
-            </div>
-        {% endif %}
-
-        {% if ai_reply %}
-            <div class="message ai">
-                <strong>AI:</strong>
-                <p>{{ ai_reply }}</p>
-            </div>
-        {% endif %}
-
+    <!-- Animated Background Particles -->
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
     </div>
 
+    <div class="chat-wrapper">
+        <!-- Minimalist Header -->
+        <header class="chat-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-pulse">
+                        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                            <path d="M12 2v4M12 18v4M22 12h-4M6 12H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M19.07 4.93l-2.83 2.83M7.76 16.24l-2.83 2.83M19.07 19.07l-2.83-2.83M7.76 7.76L4.93 4.93" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h1 class="header-title">AI Assistant</h1>
+                </div>
+                <div class="connection-status">
+                    <div class="pulse-ring"></div>
+                    <div class="pulse-dot"></div>
+                </div>
+            </div>
+        </header>
 
+        <!-- Chat Container -->
+        <div class="chat-container" id="chatContainer">
+            <!-- Welcome Message (shown when no messages) -->
+            {% if not user_message and not ai_reply %}
+            <div class="welcome-screen">
+                <div class="welcome-icon">
+                    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="2" opacity="0.2"/>
+                        <circle cx="50" cy="50" r="35" stroke="currentColor" stroke-width="2" opacity="0.4"/>
+                        <circle cx="50" cy="50" r="25" stroke="currentColor" stroke-width="2" opacity="0.6"/>
+                        <circle cx="50" cy="50" r="15" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h2 class="welcome-title">Start a Conversation</h2>
+                <p class="welcome-subtitle">Ask me anything, I'm here to help</p>
+            </div>
+            {% endif %}
+
+            <div class="messages-wrapper">
+                {% if user_message %}
+                    <div class="message user-message">
+                        <div class="message-content">
+                            <div class="message-bubble user-bubble">
+                                <p>{{ user_message }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if ai_reply %}
+                    <!-- AI Typing Indicator (shows before reply) -->
+                    <div class="message ai-message typing-message" id="typingIndicator" style="display: none;">
+                        <div class="ai-avatar-wrapper">
+                            <div class="avatar-glow"></div>
+                            <div class="message-avatar ai-avatar">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="message-content">
+                            <div class="typing-indicator">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Reply -->
+                    <div class="message ai-message">
+                        <div class="ai-avatar-wrapper">
+                            <div class="avatar-glow"></div>
+                            <div class="message-avatar ai-avatar">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble ai-bubble">
+                                <p>{{ ai_reply }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Input Form -->
+        <div class="input-container">
+            <form method="post" action="/chat" class="chat-form" id="chatForm">
+                <div class="input-wrapper">
+                    <div class="input-field">
+                        <input
+                            type="text"
+                            name="message"
+                            id="messageInput"
+                            placeholder="Type your message..."
+                            class="message-input"
+                            required
+                            autocomplete="off"
+                        >
+                        <div class="input-border"></div>
+                    </div>
+                    <button type="submit" class="send-button" id="sendButton">
+                        <span class="button-content">
+                            <svg class="send-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span class="button-text">Send</span>
+                        </span>
+                        <!-- Loading Spinner -->
+                        <span class="loading-spinner" style="display: none;">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" opacity="0.25"/>
+                                <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript for Interactions -->
+    <script>
+        // Show loading state on form submit
+        document.getElementById('chatForm').addEventListener('submit', function(e) {
+            const sendButton = document.getElementById('sendButton');
+            const buttonContent = sendButton.querySelector('.button-content');
+            const loadingSpinner = sendButton.querySelector('.loading-spinner');
+            
+            // Show loading state (don't disable input - it prevents form submission)
+            buttonContent.style.display = 'none';
+            loadingSpinner.style.display = 'flex';
+            sendButton.disabled = true;
+            
+            // Show typing indicator if it exists
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                setTimeout(() => {
+                    typingIndicator.style.display = 'flex';
+                }, 300);
+            }
+        });
+
+        // Auto-focus input on page load
+        window.addEventListener('load', function() {
+            document.getElementById('messageInput').focus();
+        });
+
+        // Smooth scroll to bottom when new messages appear
+        const chatContainer = document.getElementById('chatContainer');
+        if (chatContainer) {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Input field animation
+        const messageInput = document.getElementById('messageInput');
+        messageInput.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        messageInput.addEventListener('blur', function() {
+            this.parentElement.classList.remove('focused');
+        });
+    </script>
 </body>
 </html>

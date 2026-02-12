@@ -101,6 +101,9 @@ async def get_gemini_reply(message: str):
         response = await client.post(url, json=payload)
 
     data = response.json()
+    if "candidates" not in data:
+        # Gemini failed — return readable error instead of crashing
+        return "AI error: Gemini did not return a valid response."
 
     return data["candidates"][0]["content"]["parts"][0]["text"]
 
